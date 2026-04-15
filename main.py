@@ -31,8 +31,8 @@ async def extract_and_plan(file: UploadFile = File(...)):
         contents = await file.read()
         image = Image.open(io.BytesIO(contents))
         
-        # We use standard gemini-2.5-flash which supports both text and images dynamically.
-        model = genai.GenerativeModel('gemini-2.5-flash')
+        # We use standard gemini-1.5-pro which supports both text and images dynamically.
+        model = genai.GenerativeModel('gemini-1.5-pro')
         
         prompt = """
         You are an expert academic advisor for De Anza College transfers to UC Berkeley.
@@ -80,7 +80,7 @@ async def extract_and_plan(file: UploadFile = File(...)):
     except json.JSONDecodeError:
         raise HTTPException(status_code=500, detail="AI parsing failure. Try uploading the image again.")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Model gemini-1.5-pro Error: {str(e)}")
 
 
 @app.get("/")
