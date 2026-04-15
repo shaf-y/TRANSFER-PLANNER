@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimal Transfer Plan | De Anza to UC Berkeley</title>
+    <!-- Modern Typography: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    
+    <main class="dashboard">
+        <header class="header">
+            <div class="header-content">
+                <div class="badge">B.S. Chemical Engineering Pathway</div>
+                <h1>Optimal 1-Year Transfer Plan</h1>
+                <p>Transferring from <b>De Anza College</b> to <b>UC Berkeley</b>. This highly optimized plan balances intense STEM sequences with lower-difficulty GEs to maximize your transfer GPA safety.</p>
+                
+                <button id="generateBtn" class="primary-btn">
+                    <span class="btn-text">Generate Academic Plan</span>
+                    <span class="btn-glow"></span>
+                </button>
+            </div>
+        </header>
+
+        <section id="planContainer" class="plan-grid hidden">
+            <!-- Quarters will be injected here via JavaScript -->
+        </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
