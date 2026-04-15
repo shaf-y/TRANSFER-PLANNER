@@ -31,8 +31,21 @@ async def extract_and_plan(file: UploadFile = File(...)):
         contents = await file.read()
         image = Image.open(io.BytesIO(contents))
         
-        # We use standard gemini-1.5-pro which supports both text and images dynamically.
-        model = genai.GenerativeModel('gemini-1.5-pro')
+        # Dynamically select the best available model for this specific API key to eliminate 404s
+        available_models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
+        
+        target_model_name = None
+        for pref in ["models/gemini-1.5-pro-latest", "models/gemini-1.5-flash-latest", "models/gemini-1.5-pro", "models/gemini-1.5-flash", "models/gemini-2.5-flash", "models/gemini-pro-vision"]:
+            if pref in available_models:
+                target_model_name = pref
+                break
+                
+        if not target_model_name:
+            target_model_name = available_models[0] if available_models else 'gemini-1.5-pro'
+            
+        # Strip "models/" if present for the GenerativeModel constructor
+        clean_model_name = target_model_name.replace('models/', '')
+        model = genai.GenerativeModel(clean_model_name)
         
         prompt = """
         You are an expert academic advisor for De Anza College transfers to UC Berkeley.
@@ -80,7 +93,11 @@ async def extract_and_plan(file: UploadFile = File(...)):
     except json.JSONDecodeError:
         raise HTTPException(status_code=500, detail="AI parsing failure. Try uploading the image again.")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Model gemini-1.5-pro Error: {str(e)}")
+        try:
+            available_models = [m.name for m in genai.list_models() if "generateContent" in m.supported_generation_methods]
+        except Exception:
+            available_models = ["Failed to fetch models"]
+        raise HTTPException(status_code=500, detail=f"Model gemini-1.5-pro Error: {str(e)} | Available models for your API key: {available_models}")
 
 
 @app.get("/")
