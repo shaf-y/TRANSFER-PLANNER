@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from scheduler import generate_plan
 from fastapi.middleware.cors import CORSMiddleware
@@ -19,12 +18,10 @@ app.add_middleware(
 def get_plan():
     return {"plan": generate_plan()}
 
-# Mount static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
 @app.get("/")
 def read_root():
-    return FileResponse("static/index.html")
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    return FileResponse(os.path.join(base_dir, "static/index.html"))
 
 if __name__ == "__main__":
     import uvicorn
